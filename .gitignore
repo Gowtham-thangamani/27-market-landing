@@ -1,0 +1,4 @@
+# build artifacts / local
+27-markets-landing.zip
+.playwright-mcp/
+*.log
