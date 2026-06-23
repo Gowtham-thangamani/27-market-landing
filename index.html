@@ -361,7 +361,7 @@ section{position:relative}
 .cta-sec .lead{color:var(--muted);font-size:19px;max-width:34em;margin:0 auto 40px}
 .form{display:flex;flex-direction:column;gap:12px;max-width:540px;margin:0 auto}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form input[type=text],.form input[type=email]{
+.form input[type=text],.form input[type=email],.form input[type=tel]{
   width:100%;
   background:#0d0d0d;border:1px solid var(--border);border-radius:11px;
   padding:15px 18px;color:#fff;font-family:"IBM Plex Mono",monospace;font-size:15px;
@@ -518,6 +518,7 @@ section{position:relative}
         <div class="form-grid">
           <input type="text" id="fullname" name="full_name" placeholder="Full name" aria-label="Full name" autocomplete="name" required />
           <input type="email" id="email" name="email" placeholder="name@company.com" aria-label="Email address" autocomplete="email" required />
+          <input type="tel" id="phone" name="phone" placeholder="Phone number" aria-label="Phone number" autocomplete="tel" style="grid-column:1 / -1" required />
         </div>
         <div class="intent" role="radiogroup" aria-label="I am a">
           <label><input type="radio" name="intent" value="Trader" checked /><span>Trader</span></label>
@@ -604,6 +605,7 @@ spark(document.getElementById('kspark'),30,50);
 const form=document.getElementById('waitForm');
 const msg=document.getElementById('formMsg');
 const email=document.getElementById('email');
+const phone=document.getElementById('phone');
 const fullname=document.getElementById('fullname');
 const submitBtn=form.querySelector('button[type=submit]');
 
@@ -613,11 +615,13 @@ form.addEventListener('submit', async (e)=>{
   e.preventDefault();
   const name=fullname.value.trim();
   const mail=email.value.trim();
+  const tel=phone.value.trim();
   const intent=(form.querySelector('input[name="intent"]:checked')||{}).value||'Trader';
 
   // validation — direct, in the interface's voice
   if(name.length<2){ setMsg('Enter your full name to join the list.','err'); fullname.focus(); return; }
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)){ setMsg('Enter a valid email to join the list.','err'); email.focus(); return; }
+  if(tel.replace(/[^\d]/g,'').length<7){ setMsg('Enter a valid phone number to join the list.','err'); phone.focus(); return; }
 
   // guard: key not configured yet
   if(WEB3FORMS_ACCESS_KEY==='YOUR-WEB3FORMS-ACCESS-KEY'){
@@ -633,6 +637,7 @@ form.addEventListener('submit', async (e)=>{
     from_name: '27 Markets — Coming Soon',
     full_name: name,
     email: mail,
+    phone: tel,
     intent: intent,
     source: '27 Markets coming-soon landing',
     page_url: location.href,
